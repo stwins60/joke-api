@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: joke-backend
+  namespace: lab-demo
+spec:
+  selector:
+    matchLabels:
+      app: joke-backend
+  template:
+    metadata:
+      labels:
+        app: joke-backend
+    spec:
+      containers:
+      - name: joke-backend
+        image: idrisniyi94/joke-backend-microservice:stable
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5055

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joke App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Joke App</h1>
+
+        <div class="joke-list">
+            <h2>All Jokes</h2>
+            <ul id="jokes"></ul>
+        </div>
+
+        <div class="random-joke">
+            <h2>Random Joke</h2>
+            <p id="randomJoke"></p>
+            <button onclick="fetchRandomJoke()">Get Random Joke</button>
+        </div>
+    </div>
+
+    <script>
+        // Fetch all jokes
+        function fetchJokes() {
+            fetch('http://localhost:5055/api/v1/jokes')
+                .then(response => response.json())
+                .then(data => {
+                    const jokesList = document.getElementById('jokes');
+                    jokesList.innerHTML = '';
+                    data.forEach(joke => {
+                        const li = document.createElement('li');
+                        li.textContent = `${joke.setup} - ${joke.punchline}`;
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.textContent = 'Delete';
+                        deleteBtn.onclick = () => deleteJoke(joke.id);
+                        li.appendChild(deleteBtn);
+                        jokesList.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('Error fetching jokes:', error));
+        }
+
+        // Fetch random joke
+        function fetchRandomJoke() {
+            fetch('http://localhost:5055/api/v1/jokes/random')
+                .then(response => response.json())
+                .then(data => {
+                    const randomJoke = document.getElementById('randomJoke');
+                    randomJoke.textContent = `${data.setup} - ${data.punchline}`;
+                })
+                .catch(error => console.error('Error fetching random joke:', error));
+        }
+
+        // Delete joke
+        function deleteJoke(jokeId) {
+            fetch(`http://localhost:5055/api/v1/jokes/${jokeId}`, {
+                method: 'DELETE',
+            })
+                .then(response => response.json())
+                .then(() => {
+                    fetchJokes();
+                })
+                .catch(error => console.error('Error deleting joke:', error));
+        }
+
+        // Initial fetch of jokes when the page loads
+        window.onload = fetchJokes;
+    </script>
+</body>
+</html>

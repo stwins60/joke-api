@@ -1,0 +1,24 @@
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - joke-net
+    ports:
+      - "5000:5000"
+    depends_on:
+      - backend
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - joke-net
+    ports:
+      - "5055:5055"
+
+networks:
+  joke-net:

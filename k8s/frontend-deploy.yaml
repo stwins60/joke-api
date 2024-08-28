@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: joke-frontend
+  namespace: lab-demo
+spec:
+  selector:
+    matchLabels:
+      app: joke-frontend
+  template:
+    metadata:
+      labels:
+        app: joke-frontend
+    spec:
+      containers:
+      - name: joke-frontend
+        image: idrisniyi94/joke-frontend-microservice
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5000
